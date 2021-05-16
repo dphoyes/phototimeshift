@@ -1,0 +1,31 @@
+#!/usr/bin/env python3
+
+import pyexiv2
+import datetime
+
+m_orig = pyexiv2.ImageMetadata("DSC_0080.MOV")
+m_copy = pyexiv2.ImageMetadata("DSC_0080_copy.MOV")
+
+m_orig.read()
+m_copy.read()
+
+OFFSET = (66 * 365 + 17) * 24 * 3600
+
+
+print(datetime.datetime.fromtimestamp(float(m_orig['Xmp.video.ModificationDate'].value) - OFFSET).astimezone(datetime.timezone.utc))
+print(datetime.datetime.fromtimestamp(float(m_copy['Xmp.video.ModificationDate'].value) - OFFSET).astimezone(datetime.timezone.utc))
+
+# print(int(m_orig['Xmp.video.ModificationDate'].value) - datetime.datetime.fromisoformat("2018-08-10T20:27:08").timestamp() )
+# print(int(m_copy['Xmp.video.ModificationDate'].value) - datetime.datetime.fromisoformat("2016-05-05T12:12:12").timestamp() )
+
+m_copy['Xmp.video.ModificationDate'].value = "42"
+m_copy.write()
+
+print(m_copy['Xmp.video.ModificationDate'].value)
+m_copy = pyexiv2.ImageMetadata("DSC_0080_copy.MOV")
+m_copy.read()
+print(m_copy['Xmp.video.ModificationDate'].value)
+
+
+# exiftool DSC_0080_ffmpeg.MOV -Quicktime:CreateDate -Quicktime:ModifyDate -Quicktime:TrackCreateDate -Quicktime:TrackModifyDate -Quicktime:MediaCreateDate -Quicktime:MediaModifyDate
+# exiftool DSC_0080_copy.MOV -Quicktime:ModifyDate="2016-05-05 16:12:12" # UTC

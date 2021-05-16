@@ -1,0 +1,24 @@
+#!/usr/bin/env python3
+
+import gi
+gi.require_version('Gtk', '3.0')
+from gi.repository import Gtk, GObject, GdkPixbuf
+import gbulb
+gbulb.install(gtk=True)
+
+import asyncio
+from asyncio import subprocess
+
+async def do_work():
+    process = await asyncio.create_subprocess_exec(
+        "exiftool", "mpl_extract.py", "-Quicktime:CreateDate",
+        stdout=subprocess.PIPE,
+        stderr=subprocess.STDOUT
+    )
+
+    stdout, _ = await process.communicate()
+    print(stdout)
+
+if __name__  == "__main__":
+    loop = asyncio.get_event_loop()
+    loop.run_until_complete(do_work())
