@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=Photo Timeshift
+Name[en_GB]=Photo Timeshift
+Comment=Edit photo timestamp metadata
+Comment[en_GB]=Edit photo timestamp metadata
+Exec=phototimeshift %U
+Terminal=false
+Type=Application
+Categories=Photography;Graphics;
+MimeType=inode/directory;image/gif;image/jpeg;image/png;image/bmp;image/x-eps;image/x-icns;image/x-ico;image/x-portable-bitmap;image/x-portable-graymap;image/x-portable-pixmap;image/x-xbitmap;image/x-xpixmap;image/tiff;image/x-psd;image/x-webp;image/webp;image/x-tga;application/octet-stream;
