@@ -86,6 +86,13 @@ def str_to_datetime_delta(text):
     return datetime.timedelta(seconds=seconds)
 
 
+def round_datetime_to_second(ts):
+    if ts.microsecond >= 500000:
+        return ts.replace(microsecond=0) + datetime.timedelta(seconds=1)
+    else:
+        return ts.replace(microsecond=0)
+
+
 class AsyncBytesIO:
     def __init__(self, *args):
         self.inner = io.BytesIO(*args)
@@ -335,6 +342,9 @@ class FileStore:
                     tag = metadata.get(tag_name, SENTINEL)
                     if tag is not SENTINEL:
                         row[tag_name] = tag.value
+                assert SENTINEL is metadata.get("Exif.Photo.SubSecTime", SENTINEL)
+                assert SENTINEL is metadata.get("Exif.Photo.SubSecTimeOriginal", SENTINEL)
+                assert SENTINEL is metadata.get("Exif.Photo.SubSecTimeDigitized", SENTINEL)
 
                 for tag_name in IPTC_TAGS:
                     if isinstance(tag_name, tuple):
@@ -387,7 +397,7 @@ class FileStore:
             if metadata is not None:
                 for tag_name, ts in row.iter_exiv_timestamps():
                     if ts is not None:
-                        ts = ts.astimezone(timezone) + ts_delta
+                        ts = round_datetime_to_second(ts.astimezone(timezone) + ts_delta)
                         row[tag_name] = ts
                         if isinstance(tag_name, tuple):
                             date_tag_name, time_tag_name = tag_name
@@ -417,7 +427,7 @@ class FileStore:
             if avchd_ts is not None:
                 for avchd_db in self.avchd_dirs:
                     if file.startswith(avchd_db.path):
-                        avchd_ts = avchd_ts.astimezone(timezone) + ts_delta
+                        avchd_ts = round_datetime_to_second(avchd_ts.astimezone(timezone) + ts_delta)
                         avchd_db.get_mts(os.path.basename(file))["datetime"] = avchd_ts
                         break
 
