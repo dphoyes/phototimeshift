@@ -1,0 +1,27 @@
+[tool.poetry]
+name = "phototimeshift"
+version = "0.1.0"
+description = ""
+authors = ["David Hoyes <dphoyes@gmail.com>"]
+
+packages = [
+    { include = "*.py" },
+]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+aiofiles = "^0.8.0"
+sortedcontainers = "^2.4.0"
+pytimeparse = "^1.1.8"
+gbulb = "^0.6.3"
+opencv-python = "^4.5.5"
+py3exiv2 = "^0.9.3"
+
+[tool.poetry.dev-dependencies]
+
+[tool.poetry.scripts]
+phototimeshift = 'main:main'
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
